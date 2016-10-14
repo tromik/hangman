@@ -64,10 +64,9 @@ print "H A N G M A N"
 missed_letters = ''
 correct_letters = ''
 secret_word = getRandomWord(word_list)
-game_over = FALSE
+game_over = False
 
 while TRUE:
     displayGame(hang_man, missed_letters, correct_letters, secret_word)
 
     guess = getGuess(missed_letters + correct_letters)
-    
