@@ -23,7 +23,7 @@ already_guessed = ''
 
 def getGuess():
     guess = raw_input("Enter a guess: ").lower()
-    while len(guess) > 1 or guess not in 'qwertyuiopasdfghjklzxcvbnm':
+    while len(guess) != 1 or guess not in 'qwertyuiopasdfghjklzxcvbnm':
         print 'One letter from the alaphabet please.'
         guess = getGuess()
     return guess
@@ -50,7 +50,11 @@ while counter < 8:
             if char == guess:
                 blank = blank[:char_counter*2] + char + ' ' + blank[2*char_counter+2:]
             char_counter = char_counter + 1
-        print blank
+        if blank.replace(' ', '') == secret_word:
+            print "Congrats"
+            break
+        else:
+            print blank
     else:
         counter = counter + 1
         print hang_man[counter]
