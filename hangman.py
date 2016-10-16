@@ -8,65 +8,53 @@ import random
 # If guess is not in word begin to draw the hangman (player gets 7 guess, 8th ends the game in lose state)
 # If player guesses the word within 8 guesses they win
 
+hang_man = ['0', '1', '2', '3', '4', '5', '6', '7', '8']
 
-# Create word list
-word_list = ['stop', 'helmet', 'remote', 'board',
-    'book', 'bookstore', 'animal', 'computer', 'keyboard', 'lampshade', 'speaker']
+word_list = ['animal', 'toothbrush', 'bookstore']
 
-# Generate the hangman
-# Temp - Using states
-hang_man = ['1', '2', '3', '4', '5', '6', '7', '8']
+secret_word = word_list[random.randint(0, len(word_list) - 1)]
 
-def getRandomWord(word_list):
-    # Randomly select word from word list and store
-    word = word_list[random.randint(0, len(word_list) - 1)]
-    print "Word is " + word + "\n"
-    return word
+blank = '_ ' * len(secret_word)
 
-def displayGame(hang_man, missed_letters, correct_letters, secret_word):
-    print hang_man[len(missed_letters) - 1]
-    print ''
+print blank
 
-    print "Missed letters: "
-    for letter in missed_letters:
-        print letter,
-    print ''
+counter = 0
+already_guessed = ''
 
-    blanks = '_ ' * len(secret_word)
+def getGuess():
+    guess = raw_input("Enter a guess: ").lower()
+    while len(guess) > 1 or guess not in 'qwertyuiopasdfghjklzxcvbnm':
+        print 'One letter from the alaphabet please.'
+        guess = getGuess()
+    return guess
 
-    for i in range(len(secret_word)):
-        if secret_word[i] in correct_letters:
-            blanks = blanks[:i] + secret_word[i] + blanks[i + 1:]
+def checkGuess_Word(guess):
+    if guess in secret_word:
+        return True
+    return False
 
-    for letter in blanks:
-        print letter,
+def checkGuess_Guessed(guess):
+    if guess in already_guessed:
+        return True
+    return False
 
-    print ''
+while counter < 8:
+    guess = getGuess()
+    while checkGuess_Guessed(guess):
+        print 'You already guessed {}'.format(guess)
+        guess = getGuess()
+    if checkGuess_Word(guess):
+        print 'Guess good'
+        char_counter = 0
+        for char in secret_word:
+            if char == guess:
+                blank = blank[:char_counter*2] + char + ' ' + blank[2*char_counter+2:]
+            char_counter = char_counter + 1
+        print blank
+    else:
+        counter = counter + 1
+        print hang_man[counter]
 
-def getGuess(already_guessed):
-    while True:
-        guess = raw_input("Guess a letter: ").lower()
-        if len(guess) != 1:
-            print "Please guess a single letter"
-        elif guess in already_guessed:
-            print "You've already guessed that letter, please guess again"
-        elif guess not in 'qwertyuiopasdfghjklzxcvbnm':
-            print "Please guess a letter"
-        else:
-            return guess
+    already_guessed = already_guessed + guess
 
-def playAgain():
-    play_again = raw_input("Do you want to again? (Yes or No): ")
-    if play_again.lower()[0] == 'y':
-        return play_again
-
-print "H A N G M A N"
-missed_letters = ''
-correct_letters = ''
-secret_word = getRandomWord(word_list)
-game_over = False
-
-while TRUE:
-    displayGame(hang_man, missed_letters, correct_letters, secret_word)
-
-    guess = getGuess(missed_letters + correct_letters)
+print 'The word was ' + secret_word
